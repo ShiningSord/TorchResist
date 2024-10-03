@@ -8,10 +8,6 @@ We implemented the resist model from scratch and refined it with a calibration s
 
 # Quick Start
 
-
-Install FuILT
 ```
-cd /path/to/FuILT
-pip3 install -e .
-cd /path/to/here
+python -m  eval.test_abbe_par
 ```

@@ -167,3 +167,4 @@ cython_debug/
 jz.sh
 start.sh
 debug.sh
+output/
