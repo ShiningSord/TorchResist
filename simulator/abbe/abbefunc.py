@@ -2,14 +2,14 @@ from typing import Any
 from .abbe import AbbeGradient, AbbeSim
 import torch
 from torch.autograd import Function
-from fuILT.utils import BBox
+from utils import BBox
 
 class AbbeFunc(Function):
     @staticmethod
     def forward(ctx,
                 mask,
-                bbox : BBox, 
-                pixel : int, 
+                bbox: BBox, 
+                pixel: int, 
                 defocus=0, 
                 sigma=0.05, 
                 NA=1.35, 
@@ -74,3 +74,7 @@ class AbbeFunc(Function):
             grad = AbbeGradient(bbox=None, pixel=pixel, sigma=sigma, NA=NA, wavelength=wavelength, defocus=defocus, batch=batch, par=par)
     
         return grad(mask) * grad_outputs, None, None, None, None, None, None, None, None
+    
+    
+if __name__ == "__main__":
+    pass

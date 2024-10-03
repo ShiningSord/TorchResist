@@ -8,7 +8,7 @@ from ..source.source import getGridSize
 from ..source.source import getDeltaFreq
 from ..source.source import getDefocus
 from ..utils import getMaskFFT
-from fuILT.utils import BBox, Point
+from utils import BBox, Point
 from matplotlib import pyplot as plt
 import numpy as np
 import threading
