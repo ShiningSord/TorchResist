@@ -9,5 +9,6 @@ We implemented the resist model from scratch and refined it with a calibration s
 # Quick Start
 
 ```
-python -m  eval.test_abbe_par
+python -m  examples.abbe
+python -m  examples.resist
 ```
