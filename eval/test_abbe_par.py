@@ -7,8 +7,8 @@ from simulator import AbbeSim, AbbeGradient
 from utils import BBox, Point
 
 sigma = 0.05
-pixelsize = 4
-canvas = 1024
+pixelsize = 14
+canvas = 256 * 14
 size = round(canvas/pixelsize)
 device = torch.device("cuda")
 

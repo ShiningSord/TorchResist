@@ -25,8 +25,8 @@ def load_images_in_batches(folder_path, batch_size):
             image = Image.open(image_path).convert('L')  # 转换为灰度图
             image_np = np.array(image, dtype=np.float32)  # 转换为numpy array
             
-            # 添加通道维度并转换为tensor，格式为 (C, H, W)，C=1
-            image_tensor = torch.from_numpy(image_np).unsqueeze(0)  # unsqueeze to add the channel dimension
+            # 添加通道维度并转换为tensor，格式为 (C, H, W)
+            image_tensor = torch.from_numpy(image_np)  # unsqueeze to add the channel dimension
             
             batch_images.append(image_tensor)
         
