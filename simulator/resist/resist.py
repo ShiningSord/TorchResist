@@ -147,7 +147,7 @@ class ResistSimulator(torch.nn.Module):
             plt.ylabel('Y (nm)')
             plt.title(f'Resist Image Dev Time {self.developed_time.item()}')
             
-            save_path = os.path.join(self.save_dir, f"resist_t_dev{self.developed_time.item()}.png")
+            save_path = os.path.join(self.save_dir, f"resist_t_dev.png")
             plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
             plt.close()
         
