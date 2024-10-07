@@ -10,4 +10,4 @@ simulator = get_default_simulator()
 aerial_image = Image.open('examples/aerial.png')
 aerial_image = torch.from_numpy(np.array(aerial_image))/255.0
 # import pdb; pdb.set_trace()
-res = simulator.forward(aerial_image, dx=1.0)
+res = simulator.forward(aerial_image, dx=7.0)
