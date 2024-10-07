@@ -160,7 +160,7 @@ def get_default_simulator():
     lamp_power = 30000 # need further calibration
     dose = 2000 # need further calibration
     n_steps = 50
-    m_th = 0.01 # need further calibration
+    m_th = 10 # need further calibration
     r_min = 0.8 # need further calibration
     r_max = 10 # need further calibration
     developed_time = 15 # need further calibration
