@@ -33,24 +33,28 @@ class ResistSimulator(torch.nn.Module):
         self.thickness = thickness
         self.nz = nz
         
+        self.device='cuda'if torch.cuda.is_available() else "cpu"
+        
         self.save_dir = save_dir
         # Create the directory if it doesn't exist
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
 
     def forward(self, aerial_image, dx = 1.0):
+        assert len(aerial_image.shape) == 3, f"we only accept batch input, current input has a shape of {aerial_image.shape}"
         # Create a meshgrid corresponding to the resist coordinates in x,y and z direction
-        x_support = torch.tensor(list(range(aerial_image.shape[0]))) * dx # dx in nm/pixel
-        y_support = torch.tensor(list(range(aerial_image.shape[1]))) * dx # dx in nm/pixel
+        
+        x_support = torch.tensor(list(range(aerial_image.shape[1])), device=self.device) * dx # dx in nm/pixel
+        y_support = torch.tensor(list(range(aerial_image.shape[2])), device=self.device) * dx # dx in nm/pixel
         dz=self.thickness/self.nz
-        z=torch.from_numpy(np.linspace(0,self.thickness,self.nz)).float()
+        z=torch.from_numpy(np.linspace(0,self.thickness,self.nz)).float().to(self.device)
     
         X,Y,Z = torch.meshgrid((x_support, y_support, z), indexing="xy")
         # Instanciate bulk image, the aerial image is stacked with itself self.nz times.
         aerial_image=torch.stack([aerial_image for _ in range(self.nz)],-1)
         bulk_ini=aerial_image.clone().detach()
         # Apply beer Lambert absorption
-        bulk_img=bulk_ini*torch.exp(-self.alpha*Z)
+        bulk_img=bulk_ini*torch.exp(-self.alpha*Z[None])
     
         # Plotting section
         if False:
@@ -81,8 +85,8 @@ class ResistSimulator(torch.nn.Module):
             # Absorption coefficient update
             alpha=self.dill_a*lat_img+self.dill_b
             # Bulk image update
-            bulk_img=bulk_ini*torch.exp(-alpha*Z)
-            
+            bulk_img=bulk_ini*torch.exp(-alpha*Z[None])
+
         # Plotting section
         if False:
             for i in range(self.nz):
@@ -106,11 +110,11 @@ class ResistSimulator(torch.nn.Module):
         # resist_result_1 = self.get_max_depth_below_threshold(time_resist_z, threshold=self.developed_time.clone().detach().numpy()) * dz
         # resist_result_numpy = resist_result.numpy()
         # normal 
-        resist_result = torch.zeros_like(cur_dev_rate[:,:,0])
+        resist_result = torch.zeros_like(cur_dev_rate[:,:,:,0])
         resist_time = torch.ones_like(resist_result) * self.developed_time
         
         for depth in range(cur_dev_rate.shape[-1]):
-            cur_depth = cur_dev_rate[:,:,depth] * resist_time
+            cur_depth = cur_dev_rate[:,:,:,depth] * resist_time
             mask_less_eq_dz = (cur_depth <= dz)
             mask_greater_dz = (cur_depth > dz)
             
@@ -121,7 +125,7 @@ class ResistSimulator(torch.nn.Module):
             resist_time[mask_less_eq_dz] = 0
             resist_result = resist_result + cur_depth * mask_less_eq_dz.float()
             
-            resist_time[mask_greater_dz] = resist_time[mask_greater_dz] - (dz / cur_dev_rate[:,:,depth])[mask_greater_dz]
+            resist_time[mask_greater_dz] = resist_time[mask_greater_dz] - (dz / cur_dev_rate[:,:,:,depth])[mask_greater_dz]
             resist_result = resist_result + dz * mask_greater_dz.float()
             
             if (resist_time <= 0).all():
@@ -130,20 +134,20 @@ class ResistSimulator(torch.nn.Module):
       
 
         # Plot and save the bulk image for the current depth
-        if False:
+        if True:
             plt.figure(figsize=(6, 6))
             plt.subplot(1,2,1)
-            plt.imshow(resist_result_1.detach().numpy(), cmap='gray', extent=[0, x_support[-1], 0, y_support[-1]])
+            plt.imshow(resist_result.detach().cpu().numpy()[0], cmap='gray', extent=[0, x_support[-1].cpu().numpy(), 0, y_support[-1].cpu().numpy()])
             plt.xlabel('X (nm)')
             plt.ylabel('Y (nm)')
-            plt.title(f'Resist Image Dev Time {self.developed_time}')
+            plt.title(f'Resist Image Dev Time {self.developed_time.item()}')
             plt.subplot(1,2,2)
-            plt.imshow(resist_result.detach().numpy(), cmap='gray', extent=[0, x_support[-1], 0, y_support[-1]])
+            plt.imshow(resist_result.detach().cpu().numpy()[1], cmap='gray', extent=[0, x_support[-1].cpu().numpy(), 0, y_support[-1].cpu().numpy()])
             plt.xlabel('X (nm)')
             plt.ylabel('Y (nm)')
-            plt.title(f'Resist Image Dev Time {self.developed_time}')
+            plt.title(f'Resist Image Dev Time {self.developed_time.item()}')
             
-            save_path = os.path.join(self.save_dir, f"resist_t_dev{self.developed_time}.png")
+            save_path = os.path.join(self.save_dir, f"resist_t_dev{self.developed_time.item()}.png")
             plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
             plt.close()
         
@@ -206,10 +210,10 @@ def get_default_simulator():
 
 
 if __name__ == "__main__":
-    simulator = get_default_simulator()
-    
+    simulator = get_default_simulator().cuda()
     aerial_image = Image.open('/research/d5/gds/zxwang22/code/TorchLitho/aerial.png')
     aerial_image = torch.from_numpy(np.array(aerial_image))/255.0
+    aerial_image = torch.cat([aerial_image.T[None],aerial_image[None]],0).to(simulator.device)
     # import pdb; pdb.set_trace()
     res = simulator.forward(aerial_image, dx=1.0)
         
