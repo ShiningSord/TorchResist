@@ -94,34 +94,69 @@ def evaluate(model, dataloader, criterion, device):
     return total_loss / len(dataloader)
 
 
-def train_model(model, train_loader, test_loader, num_epochs, learning_rate, print_every, device):
+import torch
+
+def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_every, device):
     """
     主训练循环，进行多个epoch的训练和评估
     :param model: 要训练的模型
     :param train_loader: 训练集的DataLoader
     :param test_loader: 测试集的DataLoader
     :param num_epochs: 训练的epoch数量
-    :param learning_rate: 学习率
+    :param initial_lr: 初始学习率
     :param print_every: 打印损失的间隔
     :param device: 设备 (CPU 或 GPU)
     """
-    # 定义损失函数和优化器
+    # 定义损失函数和Adam优化器
     criterion = torch.nn.BCEWithLogitsLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr=initial_lr)
+    
+    # 设置学习率调度器，step_size表示每隔多少个epoch调整一次学习率，gamma是学习率的调整因子
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.1)
     
     # 将模型放到指定设备上
     model.to(device)
     
+    # 初始化用于保存最优模型的变量
+    best_test_loss = float('inf')
+    best_model_state = None
+
     for epoch in range(num_epochs):
         # 训练模型
+        model.train()
         train_loss = train_one_epoch(model, train_loader, optimizer, criterion, device)
         
         # 每隔print_every个epoch打印一次损失
         if (epoch + 1) % print_every == 0:
+            model.eval()  # 设置模型为评估模式
             test_loss = evaluate(model, test_loader, criterion, device)
             print(f'Epoch [{epoch+1}/{num_epochs}], '
                   f'Training Loss: {train_loss:.4f}, '
-                  f'Test Loss: {test_loss:.4f}')
+                  f'Test Loss: {test_loss:.4f}, '
+                  f'Learning Rate: {scheduler.get_last_lr()[0]:.6f}')
+            
+            # 保存测试损失最小的模型
+            if test_loss < best_test_loss:
+                best_test_loss = test_loss
+                best_model_state = model.state_dict()
+                print(f'New best model found at epoch {epoch+1}, saving model...')
+                
+                print("Final model parameters:")
+                for name, param in model.named_parameters():
+                    print(f"{name}: {param.data}")
+        
+        # 学习率调度器步进
+        scheduler.step()
+    
+    # 打印最终的模型参数
+    
+    
+    # 如果找到最优模型，保存它
+    if best_model_state is not None:
+        torch.save(best_model_state, 'best_model.pth')
+        print('Best model saved with test loss:', best_test_loss)
+
+
 
 
 def main(input_data, target_data, model, device='cuda' if torch.cuda.is_available() else 'cpu'):

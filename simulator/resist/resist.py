@@ -195,7 +195,7 @@ def get_default_simulator():
     r_min = 0.8 # need further calibration
     r_max = 10.0 # need further calibration
     developed_time = 10.0 # need further calibration
-    threshold = 25
+    threshold = 25.0
     thickness = 75
     nz = 75
     
