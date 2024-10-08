@@ -81,7 +81,7 @@ def evaluate(model, dataloader, criterion, device):
     model.eval()
     total_loss = 0.0
     with torch.no_grad():  # 禁用梯度计算
-        for inputs, targets in dataloader:
+        for inputs, targets in tqdm(dataloader):
             inputs, targets = inputs.to(device), targets.to(device)
             
             # 前向传播
