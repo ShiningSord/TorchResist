@@ -11,7 +11,7 @@ np.set_printoptions(threshold=np.inf)
 
 
 class ResistSimulator(torch.nn.Module):
-    def __init__(self, alpha= 0.0005, dill_a=0.00075, dill_b=0.00005, dill_c=0.0025, lamp_power=30000, dose=2000, n_steps=50, m_th=0.01, r_min=0.8, r_max=10, developed_time=15, thickness=1000, nz=50, save_dir = "output") -> None:
+    def __init__(self, alpha= 0.0005, dill_a=0.00075, dill_b=0.00005, dill_c=0.0025, lamp_power=30000, dose=2000, n_steps=50, m_th=0.01, r_min=0.8, r_max=10, developed_time=15, thickness=1000, nz=50, threshold=300, save_dir = "output") -> None:
         super().__init__()
         self.alpha= torch.nn.parameter.Parameter(torch.tensor(alpha),requires_grad=False)
         self.dill_a= torch.nn.parameter.Parameter(torch.tensor(dill_a),requires_grad=False)
@@ -30,6 +30,7 @@ class ResistSimulator(torch.nn.Module):
         
         
         self.developed_time = torch.nn.parameter.Parameter(torch.tensor(developed_time),requires_grad=False)
+        self.threshold = torch.nn.parameter.Parameter(torch.tensor(threshold),requires_grad=False)
         self.thickness = thickness
         self.nz = nz
         
@@ -194,6 +195,7 @@ def get_default_simulator():
     r_min = 0.8 # need further calibration
     r_max = 10.0 # need further calibration
     developed_time = 10.0 # need further calibration
+    threshold = 25
     thickness = 75
     nz = 75
     
@@ -206,6 +208,7 @@ def get_default_simulator():
     simulator.r_min.requires_grad_(True)
     simulator.r_max.requires_grad_(True)
     simulator.developed_time.requires_grad_(True)
+    simulator.threshold.requires_grad_(True)
     return simulator
 
 

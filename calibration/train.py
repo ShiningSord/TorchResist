@@ -54,6 +54,7 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
         
         # 前向传播
         outputs = model(inputs)
+        outputs = (outputs - model.threshold)/model.thickness
         loss = criterion(outputs, targets)
         
         # 反向传播和优化
@@ -61,7 +62,8 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
         optimizer.step()
-        print(f"{iter}/{total_iter}, Loss:{loss.item():.2f}")
+        if iter % 10 == 0:
+            print(f"{iter}/{total_iter}, Loss:{loss.item():.2f}")
         total_loss += loss.item()
     
     return total_loss / len(dataloader)
@@ -72,7 +74,7 @@ def evaluate(model, dataloader, criterion, device):
     评估模型在测试集上的表现
     :param model: 训练好的模型
     :param dataloader: 测试数据的DataLoader
-    :param criterion: 损失函数（L2 Loss）
+    :param criterion: 损失函数
     :param device: 设备 (CPU 或 GPU)
     :return: 平均测试损失
     """
@@ -84,6 +86,7 @@ def evaluate(model, dataloader, criterion, device):
             
             # 前向传播
             outputs = model(inputs)
+            outputs = (outputs - model.threshold)/model.thickness
             loss = criterion(outputs, targets)
             
             total_loss += loss.item()
@@ -103,7 +106,7 @@ def train_model(model, train_loader, test_loader, num_epochs, learning_rate, pri
     :param device: 设备 (CPU 或 GPU)
     """
     # 定义损失函数和优化器
-    criterion = torch.nn.MSELoss()  # L2 Loss
+    criterion = torch.nn.BCEWithLogitsLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
     
     # 将模型放到指定设备上
@@ -137,7 +140,7 @@ def main(input_data, target_data, model, device='cuda' if torch.cuda.is_availabl
 
 if __name__ == "__main__":
     inputs = np.random.random([1000,100,100])
-    targets = np.random.random([1000,100,100])
+    targets = (np.random.random([1000,100,100])>0.5).astype(np.float)
     simulator = get_default_simulator()
     simulator.dill_c.requires_grad_(False)
     main(inputs, targets, simulator)
