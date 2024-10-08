@@ -9,6 +9,8 @@ from simulator import get_default_simulator
 
 
 
+target_threshold = 0.5
+
 def prepare_data(input_data, target_data, test_size=0.2, batch_size=32):
     """
     将数据集划分为训练集和测试集，并返回DataLoader
@@ -54,9 +56,9 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
         inputs, targets = inputs.to(device), targets.to(device)
         
         # 前向传播
-        outputs = model(inputs)
+        outputs = model(inputs, dx = 7.0)
         outputs = (outputs - model.threshold)/model.thickness
-        loss = criterion(outputs, targets)
+        loss = criterion(outputs, (targets > target_threshold).float())
         
         # 反向传播和优化
         optimizer.zero_grad()
@@ -88,14 +90,18 @@ def evaluate(model, dataloader, criterion, device):
             inputs, targets = inputs.to(device), targets.to(device)
             H, W = targets.shape[-2:]
             upsampled_targets = F.interpolate(targets.unsqueeze(0).clone().detach(), size=(int(7*H), int(7*W)), mode='bilinear', align_corners=False).squeeze(0)
-            
+            upsampled_targets =  (upsampled_targets > target_threshold).float()
             # 前向传播
-            outputs = model(inputs)
-            loss = criterion(outputs, targets)
+            outputs = model(inputs, dx = 7.0)
+            outputs_clone = outputs.clone().detach()
+            outputs = (outputs - model.threshold) / model.thickness
+            loss = criterion(outputs, (targets > target_threshold).float())
             total_loss += loss.item()
             
-            upsampled_outputs = F.interpolate(outputs.unsqueeze(0).clone().detach(), size=(int(7*H), int(7*W)), mode='bilinear', align_corners=False).squeeze(0)
-            upsampled_outputs = (upsampled_outputs > model.thickness).float()
+            
+            
+            upsampled_outputs = F.interpolate(outputs_clone.unsqueeze(0), size=(int(7*H), int(7*W)), mode='bilinear', align_corners=False).squeeze(0)
+            upsampled_outputs = (upsampled_outputs > model.threshold).float()
             diff = torch.abs(upsampled_targets - upsampled_outputs).mean()
             total_diff += diff.item()
     avg_diff = total_diff / len(dataloader)
@@ -127,7 +133,8 @@ def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_
     model.to(device)
     
     # 初始化用于保存最优模型的变量
-    best_test_diff = evaluate(model, test_loader, criterion, device)
+    best_test_diff, best_test_loss = evaluate(model, test_loader, criterion, device)
+    print(f"best_test_diff {best_test_diff}, best_test_loss {best_test_loss}")
     best_model_state = None
 
     for epoch in range(num_epochs):
@@ -185,7 +192,8 @@ def main(input_data, target_data, model, device='cuda' if torch.cuda.is_availabl
 
 if __name__ == "__main__":
     inputs = np.random.random([1000,100,100])
-    targets = (np.random.random([1000,100,100])>0.5).astype(np.float)
+    inputs = inputs / (inputs.max() + 1e-6)
+    targets = np.random.random([1000,100,100]).astype(np.float)
     simulator = get_default_simulator()
     simulator.dill_c.requires_grad_(False)
     main(inputs, targets, simulator)
