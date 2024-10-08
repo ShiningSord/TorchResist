@@ -104,7 +104,7 @@ class ResistSimulator(torch.nn.Module):
                 plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
                 plt.close()
         # Computation of the development rate with typical parameters
-        cur_dev_rate=self.Mack_Developement_Rate(latent_img=lat_img, m_th=self.m_th, r_min=self.r_min, r_max=self.r_max, n=2)
+        cur_dev_rate=self.Mack_Developement_Rate(latent_img=lat_img, m_th=self.m_th, r_min=self.r_min, r_max=self.r_max, n=5)
         # cur_dev_rate.shape = H, W, D
         # inverse
         # time_resist_z = cumtrapz(1. / cur_dev_rate.clone().detach().numpy(), dx=dz, axis=2,initial=0)

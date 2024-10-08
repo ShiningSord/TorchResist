@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
+import torch.nn.functional as F
 
 from simulator import get_default_simulator
 
@@ -79,19 +80,27 @@ def evaluate(model, dataloader, criterion, device):
     :return: 平均测试损失
     """
     model.eval()
+    total_diff = 0.0
     total_loss = 0.0
+    
     with torch.no_grad():  # 禁用梯度计算
         for inputs, targets in tqdm(dataloader):
             inputs, targets = inputs.to(device), targets.to(device)
+            H, W = targets.shape[-2:]
+            upsampled_targets = F.interpolate(targets.unsqueeze(0).clone().detach(), size=(int(7*H), int(7*W)), mode='bilinear', align_corners=False).squeeze(0)
             
             # 前向传播
             outputs = model(inputs)
-            outputs = (outputs - model.threshold)/model.thickness
             loss = criterion(outputs, targets)
-            
             total_loss += loss.item()
-    
-    return total_loss / len(dataloader)
+            
+            upsampled_outputs = F.interpolate(outputs.unsqueeze(0).clone().detach(), size=(int(7*H), int(7*W)), mode='bilinear', align_corners=False).squeeze(0)
+            upsampled_outputs = (upsampled_outputs > model.thickness).float()
+            diff = torch.abs(upsampled_targets - upsampled_outputs).mean()
+            total_diff += diff.item()
+    avg_diff = total_diff / len(dataloader)
+    avg_loss = total_loss / len(dataloader)
+    return avg_diff,avg_loss
 
 
 import torch
@@ -112,13 +121,13 @@ def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_
     optimizer = torch.optim.Adam(model.parameters(), lr=initial_lr)
     
     # 设置学习率调度器，step_size表示每隔多少个epoch调整一次学习率，gamma是学习率的调整因子
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.3)
     
     # 将模型放到指定设备上
     model.to(device)
     
     # 初始化用于保存最优模型的变量
-    best_test_loss = float('inf')
+    best_test_diff = evaluate(model, test_loader, criterion, device)
     best_model_state = None
 
     for epoch in range(num_epochs):
@@ -129,19 +138,20 @@ def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_
         # 每隔print_every个epoch打印一次损失
         if (epoch + 1) % print_every == 0:
             model.eval()  # 设置模型为评估模式
-            test_loss = evaluate(model, test_loader, criterion, device)
+            test_diff, test_loss = evaluate(model, test_loader, criterion, device)
             print(f'Epoch [{epoch+1}/{num_epochs}], '
-                  f'Training Loss: {train_loss:.4f}, '
-                  f'Test Loss: {test_loss:.4f}, '
+                  f'Training Loss: {train_loss:.8f}, '
+                  f'Test Loss: {test_loss:.8f}, '
+                  f'Test Diff: {test_diff:.8f}, '
                   f'Learning Rate: {scheduler.get_last_lr()[0]:.6f}')
             
             # 保存测试损失最小的模型
-            if test_loss < best_test_loss:
-                best_test_loss = test_loss
+            if test_diff < best_test_diff:
+                best_test_diff = test_diff
                 best_model_state = model.state_dict()
                 print(f'New best model found at epoch {epoch+1}, saving model...')
                 
-                print("Final model parameters:")
+    
                 for name, param in model.named_parameters():
                     print(f"{name}: {param.data}")
         
@@ -154,7 +164,7 @@ def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_
     # 如果找到最优模型，保存它
     if best_model_state is not None:
         torch.save(best_model_state, 'best_model.pth')
-        print('Best model saved with test loss:', best_test_loss)
+        print('Best model saved with test diff:', best_test_diff)
 
 
 
@@ -164,8 +174,8 @@ def main(input_data, target_data, model, device='cuda' if torch.cuda.is_availabl
     train_loader, test_loader = prepare_data(input_data, target_data, test_size=0.2, batch_size=4)
     
     # 开始训练
-    num_epochs = 2
-    learning_rate = 1e-4
+    num_epochs = 10
+    learning_rate = 1e-2
     print_every = 1 # 每10个epoch打印一次损失
     
     train_model(model, train_loader, test_loader, num_epochs, learning_rate, print_every, device)
