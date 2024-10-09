@@ -65,6 +65,7 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
         optimizer.step()
+        torch.clamp(model.r_min, 0.0)
         if iter % 10 == 0:
             print(f"{iter}/{total_iter}, Loss:{loss.item():.2f}")
         total_loss += loss.item()
