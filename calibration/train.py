@@ -49,6 +49,7 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
     :param device: 设备 (CPU 或 GPU)
     :return: 平均训练损失
     """
+    scale = 6.0
     model.train()
     total_loss = 0.0
     total_iter = len(dataloader)
@@ -58,6 +59,9 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
         # 前向传播
         outputs = model(inputs, dx = 7.0)
         outputs = (outputs - model.threshold)/model.thickness
+        scale_outputs = torch.zeros_like(outputs)
+        mask = outputs < 0
+        scale_outputs[mask] = outputs[mask] * scale * model.thickness / model.threshold + outputs[~mask] * scale * model.thickness /(model.thickness- model.threshold)
         loss = criterion(outputs, (targets > target_threshold).float())
         
         # 反向传播和优化
@@ -65,7 +69,7 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
         optimizer.step()
-        torch.clamp(model.r_min, 0.0)
+        model.r_min.data = torch.clamp(model.r_min.data, 0.0)
         if iter % 10 == 0:
             print(f"{iter}/{total_iter}, Loss:{loss.item():.2f}")
         total_loss += loss.item()
