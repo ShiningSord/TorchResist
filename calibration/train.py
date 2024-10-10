@@ -61,8 +61,9 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
         outputs = (outputs - model.threshold)/model.thickness
         scale_outputs = torch.zeros_like(outputs)
         mask = outputs < 0
-        scale_outputs[mask] = outputs[mask] * scale * model.thickness / model.threshold + outputs[~mask] * scale * model.thickness /(model.thickness- model.threshold)
-        loss = criterion(outputs, (targets > target_threshold).float())
+        scale_outputs[mask] =  outputs[mask] * scale * model.thickness / model.threshold
+        scale_outputs[~mask] = outputs[~mask] * scale * model.thickness /(model.thickness- model.threshold)
+        loss = criterion(scale_outputs, (targets > target_threshold).float())
         
         # 反向传播和优化
         optimizer.zero_grad()
@@ -87,6 +88,7 @@ def evaluate(model, dataloader, criterion, device):
     :return: 平均测试损失
     """
     model.eval()
+    scale = 6.0
     total_diff = 0.0
     total_loss = 0.0
     
@@ -99,8 +101,13 @@ def evaluate(model, dataloader, criterion, device):
             # 前向传播
             outputs = model(inputs, dx = 7.0)
             outputs_clone = outputs.clone().detach()
-            outputs = (outputs - model.threshold) / model.thickness
-            loss = criterion(outputs, (targets > target_threshold).float())
+            scale_outputs = torch.zeros_like(outputs)
+            outputs = (outputs - model.threshold)/model.thickness
+            mask = outputs < 0
+            scale_outputs[mask] =  outputs[mask] * scale * model.thickness / model.threshold
+            scale_outputs[~mask] = outputs[~mask] * scale * model.thickness /(model.thickness- model.threshold)
+            loss = criterion(scale_outputs, (targets > target_threshold).float())
+
             total_loss += loss.item()
             
             
