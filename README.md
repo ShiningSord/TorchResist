@@ -133,28 +133,28 @@ python3 litho_fuilt.py --mask path/to/7nm/mask/numpy.npy --resolution 7.0 --outp
 
 ## TorchResist
 
-文字说明对于每一种光学方案，我们都提供一套对应的resist 参数
+TorchResist is a powerful tool designed to provide resist parameters for a wide range of optical lithography solutions. For each optical setup, we offer a comprehensive set of resist parameters and an easy-to-use script to perform resist simulations.
 
-给一个脚本完成resist的工作
-
-在函数中，请用一个输入的参数对其进行区分，比如
-
-```
-python3 resist.py --lithomodel ICCAD13 --lithoresult path_to_numpy.npy --outpath xxxx --resolution 7.0
-```
-
-文字说明，我们默认7nm的分辨率，虽然我们没有仔细考证过，但是实际使用时，resist这一步的分辨率可以适当地按照需要调整不影响结果。
-
-最后只需要存储二值化的图片和numpy就行
-
-
-结果存在 
-
+### Usage
+You can use the provided script to simulate resist by specifying the necessary parameters. For example:
 
 ```
-data/dataset1/resist/fuilt/images/resist000000.png
-data/dataset1/resist/fuilt/numpys/resist.npy
+python3 -m examples.resist --lithomodel FUILT --lithoresult /research/d5/gds/zxwang22/storage/resist/fuilt/lithoresult/7nm/abbe_intensity.npy --outpath /research/d5/gds/zxwang22/storage/resist/fuilt/resist --resolution 1.0
 ```
+
+- `--lithomodel`: Specifies the used lithography model (chosen from `ICCAD13` and `FUILT`).
+- `--lithoresult`: Path to the input `.npy` file containing lithography results.
+- `--outpath`: Directory to save the output files.
+- `--resolution`: Resolution of input in nanometers (default: `1.0`).
+
+
+### Features
+
+- **Customizable Parameters:** Adjust resist settings via input arguments for different lithography models and resolutions.
+- **Flexible Resolution:** By default, the tool assumes a resolution of 7nm. While this resolution has not been rigorously validated, you can modify it based on your requirements without significantly impacting the results.
+
+
+
 
 类似的，加入demo展示
 

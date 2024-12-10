@@ -57,21 +57,6 @@ class ResistSimulator(torch.nn.Module):
         # Apply beer Lambert absorption
         bulk_img=bulk_ini*torch.exp(-self.alpha*Z[None])
     
-        # Plotting section
-        if False:
-            for i in range(self.nz):
-                # Extract the i-th layer of the bulk image
-                bulk_slice = bulk_img[:,:,i].numpy()
-                
-                # Plot and save the bulk image for the current depth
-                plt.figure(figsize=(6, 6))
-                plt.imshow(bulk_slice, cmap='gray', extent=[0, x_support[-1], 0, y_support[-1]])
-                plt.xlabel('X (nm)')
-                plt.ylabel('Y (nm)')
-                plt.title(f'Bulk Image at Depth {i}, Z = {z[i]:.1f} nm')
-                save_path = os.path.join(self.save_dir, f"initail_bulk_image_depth_{i}.png")
-                plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
-                plt.close()
         
         # Initialise latent image
         lat_img=torch.ones_like(bulk_img)
@@ -88,21 +73,6 @@ class ResistSimulator(torch.nn.Module):
             # Bulk image update
             bulk_img=bulk_ini*torch.exp(-alpha*Z[None])
 
-        # Plotting section
-        if False:
-            for i in range(self.nz):
-                # Extract the i-th layer of the bulk image
-                bulk_slice = bulk_img[:,:,i].numpy()
-                
-                # Plot and save the bulk image for the current depth
-                plt.figure(figsize=(6, 6))
-                plt.imshow(bulk_slice, cmap='gray', extent=[0, x_support[-1], 0, y_support[-1]])
-                plt.xlabel('X (nm)')
-                plt.ylabel('Y (nm)')
-                plt.title(f'Bulk Image at Depth {i}, Z = {z[i]:.1f} nm')
-                save_path = os.path.join(self.save_dir, f"exposition_bulk_image_depth_{i}.png")
-                plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
-                plt.close()
         # Computation of the development rate with typical parameters
         cur_dev_rate=self.Mack_Developement_Rate(latent_img=lat_img, m_th=self.m_th, r_min=self.r_min, r_max=self.r_max, n=5)
         # cur_dev_rate.shape = H, W, D
@@ -133,26 +103,6 @@ class ResistSimulator(torch.nn.Module):
                 break
         
       
-
-        # Plot and save the bulk image for the current depth
-        if True:
-            plt.figure(figsize=(6, 6))
-            plt.subplot(1,2,1)
-            plt.imshow(resist_result.detach().cpu().numpy()[0], cmap='gray', extent=[0, x_support[-1].cpu().numpy(), 0, y_support[-1].cpu().numpy()])
-            plt.xlabel('X (nm)')
-            plt.ylabel('Y (nm)')
-            plt.title(f'Resist Image Dev Time {self.developed_time.item()}')
-            plt.subplot(1,2,2)
-            plt.imshow(resist_result.detach().cpu().numpy()[1], cmap='gray', extent=[0, x_support[-1].cpu().numpy(), 0, y_support[-1].cpu().numpy()])
-            plt.xlabel('X (nm)')
-            plt.ylabel('Y (nm)')
-            plt.title(f'Resist Image Dev Time {self.developed_time.item()}')
-            
-            save_path = os.path.join(self.save_dir, f"resist_t_dev.png")
-            plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
-            plt.close()
-        
-        
         return resist_result
         
     def get_max_depth_below_threshold(self, A, threshold):
@@ -213,6 +163,26 @@ def get_default_simulator():
 
 
 def get_fuilt_simulator():
+    alpha = 0.006186  # 6.186/um
+    dill_a = 0
+    dill_b = alpha - dill_a
+    dill_c = 0.001  
+    lamp_power = 30000.0 
+    dose = 2003.27124
+    n_steps = 50
+    m_th = 0.668257773 
+    r_min = 0.73013 
+    r_max = 9.759724 
+    developed_time = 7.68653 
+    threshold = 8.55224
+    thickness = 75
+    nz = 75
+    params = locals() 
+    simulator =  ResistSimulator(**params)
+    return simulator
+
+def get_iccad13_simulator():
+    raise NotImplementedError
     alpha = 0.006186  # 6.186/um
     dill_a = 0
     dill_b = alpha - dill_a
