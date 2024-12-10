@@ -145,7 +145,7 @@ python3 -m examples.resist --lithomodel FUILT --lithoresult /research/d5/gds/zxw
 - `--lithomodel`: Specifies the used lithography model (chosen from `ICCAD13` and `FUILT`).
 - `--lithoresult`: Path to the input `.npy` file containing lithography results.
 - `--outpath`: Directory to save the output files.
-- `--resolution`: Resolution of input in nanometers (default: `1.0`).
+- `--resolution`: Resolution of input in nanometers (default: `1.0`). You can also set it as 7.0 to save time. If so, ensure the intensity map you use corresponds to a resolution of 7 nm.
 
 
 ### Features
