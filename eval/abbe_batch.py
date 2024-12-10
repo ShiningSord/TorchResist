@@ -3,10 +3,8 @@ import os
 import numpy as np
 from PIL import Image
 import torch
-from matplotlib import pyplot as plt
 
 from simulator import AbbeSim, AbbeGradient
-from utils import BBox, Point
 from tqdm import tqdm
 
 
