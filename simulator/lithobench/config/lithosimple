@@ -1,4 +1,4 @@
-KernelDir ./kernel
+KernelDir ./simulator/lithobench/kernel
 KernelNum 24
 TargetDensity  0.225
 PrintThresh    0.5

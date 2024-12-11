@@ -5,46 +5,38 @@ import torch
 import argparse
 from PIL import Image
 import matplotlib.pyplot as plt
-from simulator import AbbeSim
+from simulator import LithoSim
 from tqdm import tqdm
 
 def parse_arguments():
     """
     Parse command-line arguments.
     """
-    parser = argparse.ArgumentParser(description="Process images with AbbeSim.")
+    parser = argparse.ArgumentParser(description="Process images with ICCAD13 Simulator.")
     parser.add_argument("--mask", required=True, type=str, help="Path to the folder containing input mask images.")
     parser.add_argument("--outpath", required=True, type=str, help="Path to the output directory.")
-    parser.add_argument("--resolution", required=True, type=float, help="Pixel size resolution for processing.")
+    parser.add_argument("--config", required=True, type=str, help="Path to the config file.")
     return parser.parse_args()
 
-def load_images_in_batches(folder_path, batch_size, device):
+def load_images_one_by_one(folder_path, device):
     """
-    Load images in batches from the specified folder.
+    Load images one by one from the specified folder.
 
     Args:
         folder_path (str): Path to the folder containing images.
-        batch_size (int): Number of images per batch.
         device (torch.device): Device to load images onto.
 
     Yields:
-        tuple: Batch of image filenames and corresponding tensors.
+        tuple: Image filename and corresponding tensor.
     """
-    image_files = [f for f in os.listdir(folder_path) if f.endswith(".png")]
+    image_files = [f for f in os.listdir(folder_path) if f.endswith(".png")][:50]
     image_files.sort()
 
-    for i in range(0, len(image_files), batch_size):
-        batch_files = image_files[i:i + batch_size]
-        batch_images = []
-
-        for file in batch_files:
-            image_path = os.path.join(folder_path, file)
-            image_np = np.array(Image.open(image_path).convert('L'), dtype=np.float32)
-            image_tensor = torch.from_numpy(image_np).to(device) / 255.0
-            batch_images.append(image_tensor)
-
-        batch_tensor = torch.stack(batch_images)
-        yield (batch_files, batch_tensor)
+    for file in image_files:
+        image_path = os.path.join(folder_path, file)
+        image_np = np.array(Image.open(image_path).convert('L'), dtype=np.float32)
+        image_tensor = torch.from_numpy(image_np).to(device) / 255.0
+        yield (file, image_tensor)
 
 def save_image(image_array, output_path, filename):
     """
@@ -74,14 +66,10 @@ def main():
     # Set paths and parameters
     mask_path = args.mask
     output_path = args.outpath
-    resolution = args.resolution
-    batch_size = 16
-    sigma = 0.05
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     # Initialize simulation and gradient
-    sim = AbbeSim(None, resolution, sigma, defocus=None, batch=True, par=False)
+    sim = LithoSim(args.config)
 
     # Create output directories
     image_output_path = os.path.join(output_path, "images")
@@ -90,14 +78,12 @@ def main():
     os.makedirs(numpy_output_path, exist_ok=True)
 
     # Process images
-    for batch_files, masks in tqdm(load_images_in_batches(mask_path, batch_size, device), desc="Processing batches"):
-        intensity = sim(masks)
+    for filename, mask in tqdm(load_images_one_by_one(mask_path, device), desc="Processing batches"):
+        intensity = sim.sim(mask)[0]
         intensity_np = intensity.cpu().numpy()
 
-        for i, filename in enumerate(batch_files):
-            # Save 
-            save_image(intensity_np[i], image_output_path, filename)
-            save_numpy(intensity_np[i], numpy_output_path, filename.replace('.png', '.npy'))
+        save_image(intensity_np, image_output_path, filename)
+        save_numpy(intensity_np, numpy_output_path, filename.replace('.png', '.npy'))
 
 if __name__ == "__main__":
     main()

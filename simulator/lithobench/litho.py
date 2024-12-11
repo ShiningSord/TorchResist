@@ -9,8 +9,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 # 自定义模块：pycommon
-from pycommon.settings import *
-import pycommon.utils as common 
+from .pycommon.settings import *
+from .pycommon import utils as common
 
 
 
