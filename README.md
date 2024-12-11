@@ -9,9 +9,9 @@
     - [ICCAD13](#iccad13)
     - [FuILT](#fuilt)
     <!-- - [Potential Third Option](#potential-third-option) -->
-- [Resist Simulation](#resist-simulation)
-  - [Usage](#usage)
-  - [Features](#features)
+  - [Resist Simulation](#resist-simulation)
+    - [Usage](#usage)
+    - [Features](#features)
 - [TO: Jieya](#to-jieya)
 - [Extension: Advanced Usage Techniques](#extension-advanced-usage-techniques)
 
