@@ -101,9 +101,9 @@ We provide two Litho Model options: ICCAD13 and FuILT.
 
 1. Two benchmarks are referred to:
    
-S. Banerjee, Z. Li, and S. R. Nassif, “ICCAD-2013 CAD contest in mask optimization and benchmark suite,” in IEEE/ACM International Conference on Computer-Aided Design (ICCAD), 2013, pp. 271–274.
+- S. Banerjee, Z. Li, and S. R. Nassif, “ICCAD-2013 CAD contest in mask optimization and benchmark suite,” in IEEE/ACM International Conference on Computer-Aided Design (ICCAD), 2013, pp. 271–274.
 
-S. Zheng etc. *lithobench*. Github, 2023, https://github.com/shelljane/lithobench.
+- S. Zheng etc. *lithobench*. Github, 2023, https://github.com/shelljane/lithobench.
 
 2. Note: Masks used here have a fixed resolution of 1nm.
 3. Use the script to generate lithography results:
