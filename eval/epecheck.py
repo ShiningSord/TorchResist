@@ -149,8 +149,22 @@ def _epecheck(mask, target, vposes, hposes):
 
 def epecheck(prediction, target):
     vposes, hposes = boundaries(target)
-    epeIn, epeOut, _ =  epecheck(prediction, target, vposes, hposes)
+    epeIn, epeOut, _ =  _epecheck(prediction, target, vposes, hposes)
     return epeIn, epeOut
  
+if __name__== "__main__":
+    
+    from PIL import Image
+    
 
+    image = Image.open('examples/cell0.jpg').convert('L')  # 转为灰度图（如果是彩色图）
+    image_array = np.array(image)
+    binary_array = image_array > 0
+    tensor = torch.tensor(binary_array, dtype=torch.bool).cuda()
+    
+    pre = tensor[100:,100:]
+    gt = tensor[:-100,:-100]
+    
+    
+    print(epecheck(pre, gt))
 
