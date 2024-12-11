@@ -81,7 +81,7 @@ Demo mask images are stored in `demo/mask/`.
 To enhance efficiency, masks can be downsampled to 7nm resolution using a script:
 
 ```bash
-python3 tools/downsampling.py --input path/to/1nm/mask --output path/to/7nm/mask
+python3 scripts/downsampling.py --input path/to/1nm/mask --output path/to/7nm/mask
 ```
 
 Output structure:
