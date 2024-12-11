@@ -64,7 +64,7 @@ Refer to [LithoBench’s GitHub](https://github.com/shelljane/lithobench) for do
 Provide a script to automate this process:
 
 ```bash
-bash tools/processmask.sh path/to/download.zip
+bash scripts/processmask.sh path/to/download.zip
 ```
 
 The final structure:
@@ -81,7 +81,7 @@ Demo mask images are stored in `demo/mask/`.
 To enhance efficiency, masks can be downsampled to 7nm resolution using a script:
 
 ```bash
-python3 scripts/downsampling.py --input path/to/1nm/mask --output path/to/7nm/mask
+python3 tools/downsampling.py --input path/to/1nm/mask --output path/to/7nm/mask
 ```
 
 Output structure:
@@ -99,7 +99,9 @@ We provide two Litho Model options: ICCAD13 and FuILT.
 
 ### ICCAD13
 
-1. Cite the ICCAD13 optical model paper and LithoBench.
+1. Two benchmarks are referred to: 
+    [1] S. Banerjee, Z. Li, and S. R. Nassif, “ICCAD-2013 CAD contest in mask optimization and benchmark suite,” in IEEE/ACM International Conference on Computer-Aided Design (ICCAD), 2013, pp. 271–274.
+    [2] S. Zheng etc. *lithobench*. Github, 2023, https://github.com/shelljane/lithobench.
 2. Note: Masks used here have a fixed resolution of 1nm.
 3. Use the script to generate lithography results:
 
@@ -121,9 +123,9 @@ data/dataset1/litho/iccad13/numpys/litho.npy
 
 ```
 python3 -m examples.fuilt \
-  --mask /research/d5/gds/zxwang22/storage/resist/cells/png/1nm \
+  --mask ./data/Dataset1/1nm/images \
   --resolution 1.0 \
-  --outpath /research/d5/gds/zxwang22/storage/resist/fuilt_new/1nm/litho
+  --outpath ./data/Dataset1/fuilt/1nm/litho
 ```
 
 Output structure:
@@ -152,8 +154,8 @@ Simulate resist with the provided script:
 ```
 python3 -m examples.resist \
   --lithomodel FUILT \
-  --lithoresult /research/d5/gds/zxwang22/storage/resist/fuilt_new/1nm/litho/numpys \
-  --outpath /research/d5/gds/zxwang22/storage/resist/fuilt_new/1nm/resist \
+  --lithoresult ./data/Dataset1/fuilt/1nm/litho/numpys \
+  --outpath ./data/Dataset1/fuilt/1nm/resist \
   --resolution 1.0
 ```
 

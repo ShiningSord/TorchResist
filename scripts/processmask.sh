@@ -1,5 +1,5 @@
 #!/bin/sh
-TARGET_DIR="./data/MetalSet/1nm" # where you want to save mask data
+TARGET_DIR="./data/Dataset1/1nm/images" # where you want to save mask data
 
 # Data paths
 ARCHIVE_FILE="$1"  # path of initial dataset lithodata.tar.gz
@@ -7,8 +7,8 @@ SAVE_DIR="./lithodata"  # path of unzipped data
 EXTRACT_DIR="./lithodata/MetalSet/target" 
 
 # unzip lithodata.tar.gz
-mkdir -p "$SAVE_DIR"
-tar xvfz "$ARCHIVE_FILE" -C "$SAVE_DIR"
+# mkdir -p "$SAVE_DIR"
+# tar xvfz "$ARCHIVE_FILE" -C "$SAVE_DIR"
 
 # Save to TARGET_DIR and rename files 
 mkdir -p "$TARGET_DIR"
