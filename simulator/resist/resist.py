@@ -201,6 +201,24 @@ def get_iccad13_simulator():
     simulator =  ResistSimulator(**params)
     return simulator
 
+def get_hg_simulator():
+    alpha = 0.006186  # 6.186/um
+    dill_a = 0
+    dill_b = alpha - dill_a
+    dill_c = 0.001  
+    lamp_power = 30000.0 
+    dose = 1999.963989
+    n_steps = 50
+    m_th = 0.73410082
+    r_min = -0.00081108051
+    r_max = 16.35210609436
+    developed_time = 11.245305061340332 
+    threshold = 27.381071090698242
+    thickness = 75
+    nz = 75
+    params = locals() 
+    simulator =  ResistSimulator(**params)
+    return simulator
 
 
 
