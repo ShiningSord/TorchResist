@@ -1,5 +1,5 @@
 #!/bin/sh
-TARGET_DIR="./data/Dataset1/1nm/images" # where you want to save mask data
+TARGET_DIR="./data/MetalSet/1nm/images" # where you want to save mask data
 
 # Data paths
 ARCHIVE_FILE="$1"  # path of initial dataset lithodata.tar.gz
