@@ -48,9 +48,9 @@ class ResistSimulator(torch.nn.Module):
         x_support = torch.tensor(list(range(aerial_image.shape[1])), device=self.device) * dx # dx in nm/pixel
         y_support = torch.tensor(list(range(aerial_image.shape[2])), device=self.device) * dx # dx in nm/pixel
         dz=self.thickness/self.nz
-        z=torch.from_numpy(np.linspace(0,self.thickness,self.nz)).float().to(self.device)
+        z=torch.from_numpy(np.linspace(0,self.thicknesss,self.nz)).float().to(self.device)
     
-        X,Y,Z = torch.meshgrid((x_support, y_support, z), indexing="xy")
+        X,Y,Z = torch.meshgrid((x_support, y_support, z), indexing="ij")
         # Instanciate bulk image, the aerial image is stacked with itself self.nz times.
         aerial_image=torch.stack([aerial_image for _ in range(self.nz)],-1)
         bulk_ini=aerial_image.clone().detach()
