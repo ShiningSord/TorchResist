@@ -12,7 +12,7 @@
   - [Resist Simulation](#resist-simulation)
     - [Usage](#usage)
     - [Features](#features)
-- [TO: Jieya](#to-jieya)
+
 - [Extension: Advanced Usage Techniques](#extension-advanced-usage-techniques)
 
 ---
