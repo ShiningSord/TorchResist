@@ -182,19 +182,18 @@ def get_fuilt_simulator():
     return simulator
 
 def get_iccad13_simulator():
-    raise NotImplementedError
     alpha = 0.006186  # 6.186/um
     dill_a = 0
     dill_b = alpha - dill_a
     dill_c = 0.001  
     lamp_power = 30000.0 
-    dose = 2003.27124
+    dose = 1999.04821777
     n_steps = 50
-    m_th = 0.668257773 
-    r_min = 0.73013 
-    r_max = 9.759724 
-    developed_time = 7.68653 
-    threshold = 8.55224
+    m_th = 0.32625094
+    r_min = 0.0
+    r_max = 17.271150588989258
+    developed_time = 12.224553108215332
+    threshold = 32.845272064208984
     thickness = 75
     nz = 75
     params = locals() 

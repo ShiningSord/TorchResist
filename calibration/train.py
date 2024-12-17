@@ -63,6 +63,7 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
         mask = outputs < 0
         scale_outputs[mask] =  outputs[mask] * scale * model.thickness / model.threshold
         scale_outputs[~mask] = outputs[~mask] * scale * model.thickness /(model.thickness- model.threshold)
+
         loss = criterion(scale_outputs, (targets > target_threshold).float())
         
         # 反向传播和优化
@@ -78,7 +79,7 @@ def train_one_epoch(model, dataloader, optimizer, criterion, device, max_grad_no
     return total_loss / len(dataloader)
 
 
-def evaluate(model, dataloader, criterion, device, reversetarget):
+def evaluate(model, dataloader, criterion, device):
     """
     评估模型在测试集上的表现
     :param model: 训练好的模型
@@ -97,6 +98,7 @@ def evaluate(model, dataloader, criterion, device, reversetarget):
             inputs, targets = inputs.to(device), targets.to(device)
             H, W = targets.shape[-2:]
             upsampled_targets = F.interpolate(targets.unsqueeze(0).clone().detach(), size=(int(7*H), int(7*W)), mode='bilinear', align_corners=False).squeeze(0)
+
             upsampled_targets =  (upsampled_targets > target_threshold).float()
             # 前向传播   
             outputs = model(inputs, dx = 7.0)
@@ -106,10 +108,8 @@ def evaluate(model, dataloader, criterion, device, reversetarget):
             mask = outputs < 0
             scale_outputs[mask] =  outputs[mask] * scale * model.thickness / model.threshold
             scale_outputs[~mask] = outputs[~mask] * scale * model.thickness /(model.thickness- model.threshold)
-            if reversetarget:
-                loss = criterion(scale_outputs, (targets < target_threshold).float())
-            else:
-                loss = criterion(scale_outputs, (targets > target_threshold).float())
+
+            loss = criterion(scale_outputs, (targets > target_threshold).float())
 
             total_loss += loss.item()
             
@@ -126,7 +126,7 @@ def evaluate(model, dataloader, criterion, device, reversetarget):
 
 import torch
 
-def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_every, device, reversetarget):
+def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_every, device):
     """
     主训练循环，进行多个epoch的训练和评估
     :param model: 要训练的模型
@@ -148,7 +148,7 @@ def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_
     model.to(device)
     
     # 初始化用于保存最优模型的变量
-    best_test_diff, best_test_loss = evaluate(model, test_loader, criterion, device, reversetarget)
+    best_test_diff, best_test_loss = evaluate(model, test_loader, criterion, device)
     print(f"best_test_diff {best_test_diff}, best_test_loss {best_test_loss}")
     best_model_state = None
 
@@ -160,7 +160,7 @@ def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_
         # 每隔print_every个epoch打印一次损失
         if (epoch + 1) % print_every == 0:
             model.eval()  # 设置模型为评估模式
-            test_diff, test_loss = evaluate(model, test_loader, criterion, device, reversetarget)
+            test_diff, test_loss = evaluate(model, test_loader, criterion, device)
             print(f'Epoch [{epoch+1}/{num_epochs}], '
                   f'Training Loss: {train_loss:.8f}, '
                   f'Test Loss: {test_loss:.8f}, '
@@ -191,16 +191,16 @@ def train_model(model, train_loader, test_loader, num_epochs, initial_lr, print_
 
 
 
-def main(input_data, target_data, simulator, reversetarget, device='cuda' if torch.cuda.is_available() else 'cpu'):
+def main(input_data, target_data, simulator, device='cuda' if torch.cuda.is_available() else 'cpu'):
     # 数据集划分
-    train_loader, test_loader = prepare_data(input_data, target_data, test_size=0.2, batch_size=4)
+    train_loader, test_loader = prepare_data(input_data, target_data, test_size=0.2, batch_size=16)
     
     # 开始训练
-    num_epochs = 10
+    num_epochs = 9
     learning_rate = 1e-2
     print_every = 1 # 每10个epoch打印一次损失
     
-    train_model(simulator, train_loader, test_loader, num_epochs, learning_rate, print_every, device, reversetarget)
+    train_model(simulator, train_loader, test_loader, num_epochs, learning_rate, print_every, device)
 
 # 你可以在主程序中调用main()，传入数据集和模型
 
@@ -211,5 +211,4 @@ if __name__ == "__main__":
     targets = np.random.random([1000,100,100]).astype(np.float)
     simulator = get_default_simulator()
     simulator.dill_c.requires_grad_(False)
-    reversetarget = True
-    main(inputs, targets, simulator, reversetarget)
+    main(inputs, targets, simulator)
