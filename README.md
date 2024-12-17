@@ -176,11 +176,6 @@ python3 -m examples.resist \
 
 ---
 
-# TO: Jieya
-
-Ensure the process can produce the desired results from scratch using the outlined steps.
-
----
 
 # Extension: Advanced Usage Techniques
 
