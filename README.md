@@ -30,14 +30,14 @@ We implemented the resist model from scratch and refined it with a calibration s
 
 Follow these steps to configure an AnaConda environment named `torchresist`:
 
-Create a new anaconda environment called torchresist and activate it using following commands:
+**Step 1:** Create a new anaconda environment called torchresist and activate it using following commands:
 
 ```bash
 conda create -n torchresist python==3.9
 conda activate torchresist
 ```
 
-Install the required dependencies for this project. Please ensure that the requirements.txt file is in the current directory.
+**Step 2:** To install the required dependencies for this project, ensure that the requirements.txt file is in the current directory, then run the following command:
 
 ```bash
 pip3 install -r requirements.txt
