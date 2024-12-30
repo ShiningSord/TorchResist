@@ -55,21 +55,27 @@ git clone https://github.com/your-repo-url.git
 
 ## Prepare Mask
 
-Refer to [LithoBench’s GitHub](https://github.com/shelljane/lithobench) for downloading mask data and organize it into the required structure:
+We use mask data provided by [LithoBench’s GitHub](https://github.com/shelljane/lithobench), please download the source data from the link provided by LithoBench's github:
+
+``` 
+https://drive.google.com/file/d/1MzYiRRxi8Eu2L6WHCfZ1DtRnjVNOl4vu/view?usp=sharing
+```
+
+Once the lithodata.tar.gz file is downloaded, unzip the data folder and organize it into the required structure:
 
 1. Create a `data` folder in the root directory.
-2. Inside `data`, create subdirectories for different mask sources, e.g., `Dataset1`, `Dataset2`.
+2. Inside `data`, create subdirectories for different mask sources, e.g., `MetalSet`.
 3. Within each dataset, create a `mask` folder containing `Images` and `Numpys` subfolders:
    - `Images`: Store binary mask images named as `mask000000.png` (six-digit format, starting from 0).
    - `Numpys`: Store mask arrays in NumPy `bool` format with shape `[B, H, W]`.
 
-Provide a script to automate this process:
+We provide a script to automate this process:
 
 ```bash
 bash scripts/processmask.sh path/to/download.zip
 ```
 
-The final structure:
+A demonstration of the final structure:
 
 ```
 data/dataset1/mask/1nm/images/mask000000.png
