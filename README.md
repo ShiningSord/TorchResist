@@ -30,16 +30,18 @@ We implemented the resist model from scratch and refined it with a calibration s
 
 Follow these steps to configure an AnaConda environment named `torchresist`:
 
+Create a new anaconda environment called torchresist and activate it using following commands:
+
 ```bash
 conda create -n torchresist python==3.9
-conda deactivate
 conda activate torchresist
-
-pip3 install numpy matplotlib torch torchvision
-conda install scikit-image
 ```
 
-Refer to [LithoBench](https://github.com/shelljane/lithobench) for additional installation details.
+Install the required dependencies for this project. Please ensure that the requirements.txt file is in the current directory.
+
+```bash
+pip3 install -r requirements.txt
+```
 
 ---
 
