@@ -53,6 +53,13 @@ First, clone the repository:
 git clone https://github.com/your-repo-url.git
 ```
 
+Next, change your directory to the project folder:
+
+```bash
+cd TorchResist
+```
+
+
 ## Prepare Mask
 
 We use mask data provided by [LithoBench’s GitHub](https://github.com/shelljane/lithobench), please download the source data `lithodata.tar.gz` from the link provided by LithoBench's github:
@@ -65,7 +72,7 @@ Once the source data is downloaded, unzip the data folder and organize it into t
 
 1. Create a `data` folder in the root directory.
 2. Inside `data`, create subdirectories for different mask sources, e.g., `MetalSet`.
-3. Within each dataset, create a `mask` folder containing `Images` and `Numpys` subfolders:
+3. Within each dataset, create a `1nm` folder containing `Images` and `Numpys` subfolders:
    - `Images`: Store binary mask images named as `mask000000.png` (six-digit format, starting from 0).
    - `Numpys`: Store mask arrays in NumPy `bool` format with shape `[B, H, W]`.
 
@@ -91,32 +98,26 @@ A demo mask image is stored in `demo/mask/`:
 To enhance efficiency, masks can be downsampled to 7nm resolution using a script:
 
 ```bash
-python3 tools/downsampling.py --input path/to/1nm/mask --output path/to/7nm/mask
+python3 tools/downsampling.py --input ./data/MetalSet/1nm/images --output ./data/MetalSet/7nm
 ```
 
 Output structure:
 
 ```
-data/dataset1/mask/7nm/images/mask000000.png
-data/dataset1/mask/7nm/numpys/mask.npy
+data/MetalSet/7nm/images/mask000000.png
+data/MetalSet/7nm/numpys/mask.npy
 ```
 
 ---
 
 ## Litho Simulation
 
-We provide two Litho Model options: ICCAD13 and FuILT.
+We provide two Litho Model options: ICCAD13[1] and FuILT[2].
 
 ### ICCAD13
 
-1. Two benchmarks are referred to:
-   
-- S. Banerjee, Z. Li, and S. R. Nassif, “ICCAD-2013 CAD contest in mask optimization and benchmark suite,” in IEEE/ACM International Conference on Computer-Aided Design (ICCAD), 2013, pp. 271–274.
-
-- S. Zheng etc. *lithobench*. Github, 2023, https://github.com/shelljane/lithobench.
-
-2. Note: Masks used here have a fixed resolution of 1nm.
-3. Use the script to generate lithography results:
+1. Note: Masks used here have a fixed resolution of 1nm.
+2. Use the script to generate lithography results:
 
 ```bash
 python3 tools/litho_iccad13.py --mask path/to/1nm/mask/numpy.npy --outpath path/to/output
