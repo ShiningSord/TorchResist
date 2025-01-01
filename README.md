@@ -59,7 +59,6 @@ Next, change your directory to the project folder:
 cd TorchResist
 ```
 
-
 ## Prepare Mask
 
 We use mask data provided by [LithoBench’s GitHub](https://github.com/shelljane/lithobench), please download the source data `lithodata.tar.gz` from the link provided by LithoBench's github:
@@ -84,8 +83,8 @@ Make sure to replace path/to/lithodata.tar.gz with the actual path where you pla
 
 A demonstration of the final structure:
 ```
-data/dataset1/mask/1nm/images/mask000000.png
-data/dataset1/mask/1nm/numpys/mask.npy
+data/MetalSet/1nm/images/mask000000.png
+data/MetalSet/1nm/numpys/mask.npy
 ```
 
 A demo mask image is stored in `demo/mask/`:
@@ -98,7 +97,7 @@ A demo mask image is stored in `demo/mask/`:
 To enhance efficiency, masks can be downsampled to 7nm resolution using a script:
 
 ```bash
-python3 tools/downsampling.py --input ./data/MetalSet/1nm/images --output ./data/MetalSet/7nm
+python3 tools/downsampling.py
 ```
 
 Output structure:
@@ -154,6 +153,12 @@ path/to/output/numpys/cell000000.npy
 **Reserved for future updates.**
 
 Demo results are stored in `demo/litho/ICCAD13/` and `demo/litho/FuILT/`. -->
+
+### References for this section:
+
+[1] S. Banerjee, Z. Li, and S. R. Nassif, “ICCAD-2013 CAD contest in mask optimization and benchmark suite,” IEEE/ACM International Conference on Computer-Aided Design (ICCAD), 2013, pp. 271–274.
+
+[2] S. Zheng, et al., LithoBench: Benchmarking AI Computational Lithography for Semiconductor Manufacturing, GitHub, 2023. Available: https://github.com/shelljane/lithobench
 
 ---
 

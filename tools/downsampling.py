@@ -74,7 +74,7 @@ def downsample_binary_images_parallel(input_folder, output_folder, downsample_ra
 
 # Example usage:
 if __name__ == "__main__":
-    input_folder = "/research/d5/gds/zxwang22/storage/resist/cells/png/1nm"  # Replace with your input folder path
-    output_folder = "/research/d5/gds/zxwang22/storage/resist/cells/png/7nm"  # Replace with your output folder path
+    input_folder = "./data/MetalSet/1nm"  # Replace with your input folder path
+    output_folder = "./data/MetalSet/7nm"  # Replace with your output folder path
 
     downsample_binary_images_parallel(input_folder, output_folder, downsample_ratio=7)
