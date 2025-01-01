@@ -82,8 +82,8 @@ data/dataset1/mask/1nm/numpys/mask.npy
 ```
 
 A demo mask image is stored in `demo/mask/`:
+
 <img src="demo/mask/cell000000.png" alt="Cell Image" width="300"/>
-![cell000000.png](demo/mask/cell000000.png)
 
 
 ### 7nm Resolution Masks
