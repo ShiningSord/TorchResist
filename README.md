@@ -82,7 +82,7 @@ data/dataset1/mask/1nm/numpys/mask.npy
 ```
 
 A demo mask image is stored in `demo/mask/`:
-![cell000000.png](TorchResist/demo/mask/cell000000.png)
+![cell000000.png](demo/mask/cell000000.png)
 
 
 ### 7nm Resolution Masks
