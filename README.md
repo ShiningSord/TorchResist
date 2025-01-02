@@ -71,7 +71,7 @@ Once the source data is downloaded, unzip the data folder and organize it into t
 
 1. Create a `data` folder in the root directory.
 2. Inside `data`, create subdirectories for different mask sources, e.g., `MetalSet`.
-3. Within each dataset, create a `1nm` folder containing `Images` and `Numpys` subfolders:
+3. Within each dataset, create a `1nm` folder under `mask` containing `Images` and `Numpys` subfolders:
    - `Images`: Store binary mask images named as `mask000000.png` (six-digit format, starting from 0).
    - `Numpys`: Store mask arrays in NumPy `bool` format with shape `[B, H, W]`.
 
@@ -83,8 +83,8 @@ Make sure to replace path/to/lithodata.tar.gz with the actual path where you pla
 
 A demonstration of the final structure:
 ```
-data/MetalSet/1nm/images/mask000000.png
-data/MetalSet/1nm/numpys/mask.npy
+data/MetalSet/mask/1nm/images/mask000000.png
+data/MetalSet/mask/1nm/numpys/mask.npy
 ```
 
 A demo mask image is stored in `demo/mask/`:
@@ -103,8 +103,8 @@ python3 tools/downsampling.py
 Output structure:
 
 ```
-data/MetalSet/7nm/images/mask000000.png
-data/MetalSet/7nm/numpys/mask.npy
+data/MetalSet/mask/7nm/images/mask000000.png
+data/MetalSet/mask/7nm/numpys/mask.npy
 ```
 
 ---
@@ -120,7 +120,7 @@ We provide two Litho Model options: ICCAD13[1] and FuILT[2].
 
 ```bash
 python3 -m examples.iccad13 \ 
-  --mask ./data/MetalSet/1nm/images \ 
+  --mask ./data/MetalSet/mask/1nm/images \ 
   --outpath ./data/MetalSet/iccad13/1nm/litho \ 
   --config ./simulator/lithobench/config/lithosimple
 
@@ -140,7 +140,7 @@ data/MetalSet/iccad13/1nm/litho/numpys/cell000000.npy
 
 ```
 python3 -m examples.fuilt \
-  --mask ./data/MetalSet/1nm/images \
+  --mask ./data/MetalSet/mask/1nm/images \
   --resolution 1.0 \
   --outpath ./data/MetalSet/fuilt/1nm/litho
 ```
@@ -177,8 +177,8 @@ Simulate resist with the provided script:
 ```
 python3 -m examples.resist \
   --lithomodel FUILT \
-  --lithoresult ./data/Dataset1/fuilt/1nm/litho/numpys \
-  --outpath ./data/Dataset1/fuilt/1nm/resist \
+  --lithoresult ./data/MetalSet/fuilt/1nm/litho/numpys \
+  --outpath ./data/MetalSet/fuilt/1nm/resist \
   --resolution 1.0
 ```
 
