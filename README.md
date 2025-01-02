@@ -71,9 +71,8 @@ Once the source data is downloaded, unzip the data folder and organize it into t
 
 1. Create a `data` folder in the root directory.
 2. Inside `data`, create subdirectories for different mask sources, e.g., `MetalSet`.
-3. Within each dataset, create a `1nm` folder under `mask` containing `Images` and `Numpys` subfolders:
-   - `Images`: Store binary mask images named as `mask000000.png` (six-digit format, starting from 0).
-   - `Numpys`: Store mask arrays in NumPy `bool` format with shape `[B, H, W]`.
+3. Within each dataset, create a `1nm` folder under `mask` containing `Images` subfolders: store binary mask images named as `mask000000.png` (six-digit format, starting from 0).
+
 
 To automate this process, you can use the provided script:
 ```bash
@@ -84,7 +83,6 @@ Make sure to replace path/to/lithodata.tar.gz with the actual path where you pla
 A demonstration of the final structure:
 ```
 data/MetalSet/mask/1nm/images/mask000000.png
-data/MetalSet/mask/1nm/numpys/mask.npy
 ```
 
 A demo mask image is stored in `demo/mask/`:
