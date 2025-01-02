@@ -119,14 +119,18 @@ We provide two Litho Model options: ICCAD13[1] and FuILT[2].
 2. Use the script to generate lithography results:
 
 ```bash
-python3 tools/litho_iccad13.py --mask path/to/1nm/mask/numpy.npy --outpath path/to/output
+python3 -m examples.iccad13 \ 
+  --mask ./data/MetalSet/1nm/images \ 
+  --outpath ./data/MetalSet/iccad13/1nm/litho \ 
+  --config ./simulator/lithobench/config/lithosimple
+
 ```
 
 Output structure:
 
 ```
-data/dataset1/litho/iccad13/images/litho000000.png
-data/dataset1/litho/iccad13/numpys/litho.npy
+data/MetalSet/iccad13/1nm/litho/images/cell000000.png
+data/MetalSet/iccad13/1nm/litho/numpys/cell000000.npy
 ```
 
 ### FuILT
@@ -136,16 +140,16 @@ data/dataset1/litho/iccad13/numpys/litho.npy
 
 ```
 python3 -m examples.fuilt \
-  --mask ./data/Dataset1/1nm/images \
+  --mask ./data/MetalSet/1nm/images \
   --resolution 1.0 \
-  --outpath ./data/Dataset1/fuilt/1nm/litho
+  --outpath ./data/MetalSet/fuilt/1nm/litho
 ```
 
 Output structure:
 
 ```
-path/to/output/images/cell000000.png
-path/to/output/numpys/cell000000.npy
+Data/MetalSet/fuilt/1nm/litho/images/cell000000.png
+Data/MetalSet/fuilt/1nm/litho/numpys/cell000000.npy
 ```
 
 <!-- ### Potential Third Option
