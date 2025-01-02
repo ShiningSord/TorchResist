@@ -120,9 +120,9 @@ We provide two Litho Model options: ICCAD13[1] and FuILT[2].
 
 ```bash
 python3 -m examples.iccad13 \ 
-  --mask ./data/MetalSet/mask/1nm/images \ 
-  --outpath ./data/MetalSet/iccad13/1nm/litho \ 
-  --config ./simulator/lithobench/config/lithosimple
+--mask ./data/MetalSet/mask/1nm/images \ 
+--outpath ./data/MetalSet/iccad13/1nm/litho \ 
+--config ./simulator/lithobench/config/lithosimple
 
 ```
 
@@ -140,9 +140,9 @@ data/MetalSet/iccad13/1nm/litho/numpys/cell000000.npy
 
 ```
 python3 -m examples.fuilt \
-  --mask ./data/MetalSet/mask/1nm/images \
-  --resolution 1.0 \
-  --outpath ./data/MetalSet/fuilt/1nm/litho
+--mask ./data/MetalSet/mask/1nm/images \
+--resolution 1.0 \
+--outpath ./data/MetalSet/fuilt/1nm/litho
 ```
 
 Output structure:
@@ -180,10 +180,10 @@ Simulate resist with the provided script:
 
 ```
 python3 -m examples.resist \
-  --lithomodel FUILT \
-  --lithoresult ./data/MetalSet/fuilt/1nm/litho/numpys \
-  --outpath ./data/MetalSet/fuilt/1nm/resist \
-  --resolution 1.0
+--lithomodel FUILT \
+--lithoresult ./data/MetalSet/fuilt/1nm/litho/numpys \
+--outpath ./data/MetalSet/fuilt/1nm/resist \
+--resolution 1.0
 ```
 
 - `--lithomodel`: Choose `ICCAD13` or `FUILT`.
