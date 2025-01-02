@@ -130,6 +130,10 @@ data/MetalSet/iccad13/1nm/litho/images/cell000000.png
 data/MetalSet/iccad13/1nm/litho/numpys/cell000000.npy
 ```
 
+A demo result is stored in `demo/litho/iccad13/`:
+
+<img src="demo/litho/iccad13/cell000000.png" alt="ICCAD13 Litho Image" width="300"/>
+
 ### FuILT
 
 1. Use masks with optional 1nm resolution (controlled via a parameter).
@@ -146,7 +150,7 @@ Data/MetalSet/fuilt/1nm/litho/images/cell000000.png
 Data/MetalSet/fuilt/1nm/litho/numpys/cell000000.npy
 ```
 
-A demo result is stored in `demo/litho/FuILT/`:
+A demo result is stored in `demo/litho/fuilt/`:
 
 <img src="demo/litho/fuilt/cell000000.png" alt="FUILT Litho Image" width="300"/>
 
