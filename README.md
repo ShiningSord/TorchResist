@@ -103,8 +103,8 @@ python3 tools/downsampling.py
 Output structure:
 
 ```
-data/MetalSet/mask/7nm/images/mask000000.png
-data/MetalSet/mask/7nm/numpys/mask.npy
+data/MetalSet/mask/7nm/images/cell000000.png
+data/MetalSet/mask/7nm/numpys/cell000000.npy
 ```
 
 ---
@@ -152,6 +152,10 @@ Data/MetalSet/fuilt/1nm/litho/images/cell000000.png
 Data/MetalSet/fuilt/1nm/litho/numpys/cell000000.npy
 ```
 
+A demo result is stored in `demo/litho/FuILT/`:
+
+<img src="demo/litho/fuilt/cell000000.png" alt="FUILT Litho Image" width="300"/>
+
 <!-- ### Potential Third Option
 
 **Reserved for future updates.**
@@ -186,6 +190,13 @@ python3 -m examples.resist \
 - `--lithoresult`: Path to the `.npy` lithography result.
 - `--outpath`: Directory for output files.
 - `--resolution`: Input resolution in nm (default: `1.0`).
+
+Output structure:
+
+```
+Data/MetalSet/fuilt/1nm/resist/images/cell000000.png
+Data/MetalSet/fuilt/1nm/resist/numpys/cell000000.npy
+```
 
 ### Features
 
