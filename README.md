@@ -102,7 +102,6 @@ Output structure:
 
 ```
 data/MetalSet/mask/7nm/images/cell000000.png
-data/MetalSet/mask/7nm/numpys/cell000000.npy
 ```
 
 ---
