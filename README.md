@@ -177,6 +177,3 @@ python3 -m examples.resist \
 ---
 
 
-# Extension: Advanced Usage Techniques
-
-Reserved for advanced instructions and optimizations.
