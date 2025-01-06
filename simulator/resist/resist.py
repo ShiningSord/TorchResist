@@ -145,8 +145,8 @@ def get_default_simulator():
     r_min = 0.1 # need further calibration
     r_max = 15.0 # need further calibration
     developed_time = 10.0 # need further calibration
-    threshold = 25.0
-    thickness = 75
+    threshold = 25.0 # need further calibration
+    thickness = 75 
     nz = 75
     
     params = locals()  # 获取所有局部变量的字典
