@@ -108,7 +108,7 @@ data/MetalSet/mask/7nm/images/cell000000.png
 
 ## Litho Simulation
 
-We provide two Litho Model options: ICCAD13[1] and FuILT[2].
+We provide two Litho Model options: ICCAD13[1,2] and FuILT[3].
 
 ### ICCAD13
 
@@ -117,7 +117,6 @@ We provide two Litho Model options: ICCAD13[1] and FuILT[2].
 
 ```bash
 python3 -m examples.iccad13 --mask ./data/MetalSet/mask/1nm/images --outpath ./data/MetalSet/iccad13/1nm/litho --config ./simulator/lithobench/config/lithosimple
-
 ```
 
 Output structure:
@@ -151,17 +150,14 @@ A demo result is stored in `demo/litho/fuilt/`:
 
 <img src="demo/litho/fuilt/cell000000.png" alt="FUILT Litho Image" width="300"/>
 
-<!-- ### Potential Third Option
-
-**Reserved for future updates.**
-
-Demo results are stored in `demo/litho/ICCAD13/` and `demo/litho/FuILT/`. -->
 
 ### References for this section:
 
- [1] S. Banerjee, Z. Li, and S. R. Nassif, “ICCAD-2013 CAD contest in mask optimization and benchmark suite,” IEEE/ACM International Conference on Computer-Aided Design (ICCAD), 2013, pp. 271–274.
+1. S. Banerjee, Z. Li, and S. R. Nassif, “ICCAD-2013 CAD contest in mask optimization and benchmark suite,” IEEE/ACM International Conference on Computer-Aided Design (ICCAD), 2013, pp. 271–274.
  
- [2] S. Zheng, et al., LithoBench: Benchmarking AI Computational Lithography for Semiconductor Manufacturing, GitHub, 2023. Available: https://github.com/shelljane/lithobench
+2. S. Zheng, et al., LithoBench: Benchmarking AI Computational Lithography for Semiconductor Manufacturing, GitHub, 2023. Available: https://github.com/shelljane/lithobench
+
+3. Shuo Yin, et al., FuILT: Full Chip ILT System With Boundary Healing, ACM International Symposium on Physical Design (ISPD), Taipei, Mar. 12–15, 2024.
 
 ---
 
