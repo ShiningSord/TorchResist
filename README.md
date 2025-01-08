@@ -13,7 +13,6 @@
     - [Usage](#usage)
     - [Features](#features)
 
-- [Extension: Advanced Usage Techniques](#extension-advanced-usage-techniques)
 
 ---
 
