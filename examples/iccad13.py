@@ -29,7 +29,7 @@ def load_images_one_by_one(folder_path, device):
     Yields:
         tuple: Image filename and corresponding tensor.
     """
-    image_files = [f for f in os.listdir(folder_path) if f.endswith(".png")][:50]
+    image_files = [f for f in os.listdir(folder_path) if f.endswith(".png")]
     image_files.sort()
 
     for file in image_files:

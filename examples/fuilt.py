@@ -32,7 +32,6 @@ def load_images_in_batches(folder_path, batch_size, device):
     """
     image_files = [f for f in os.listdir(folder_path) if f.endswith(".png")]
     image_files.sort()
-    image_files = image_files[:50]
 
     for i in range(0, len(image_files), batch_size):
         batch_files = image_files[i:i + batch_size]

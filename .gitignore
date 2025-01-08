@@ -1,5 +1,8 @@
 lithodata/
 data/
+debug.sh
+start.sh
+jz.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
