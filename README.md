@@ -49,7 +49,7 @@ pip3 install -r requirements.txt
 First, clone the repository:
 
 ```bash
-git clone https://github.com/your-repo-url.git
+git clone https://github.com/ShiningSord/TorchResist.git
 ```
 
 Next, change your directory to the project folder:

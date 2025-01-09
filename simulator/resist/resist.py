@@ -168,6 +168,45 @@ def get_fuilt_simulator():
     dill_b = alpha - dill_a
     dill_c = 0.001  
     lamp_power = 30000.0 
+    dose = 2000.15673828125
+    n_steps = 50
+    m_th = 0.36231759190559387
+    r_min = 0.01991645246744156
+    r_max = 13.891117095947266
+    developed_time = 8.882884979248047
+    threshold = 23.652942657470703
+    thickness = 75
+    nz = 75
+    params = locals() 
+    simulator =  ResistSimulator(**params)
+    return simulator
+
+def get_iccad13_simulator():
+    alpha = 0.006186  # 6.186/um
+    dill_a = 0
+    dill_b = alpha - dill_a
+    dill_c = 0.001  
+    lamp_power = 30000.0 
+    dose = 2000.7752685546875
+    n_steps = 50
+    m_th = 0.6576871871948242
+    r_min = 0.08401506394147873
+    r_max = 12.657231330871582
+    developed_time = 7.7421698570251465
+    threshold = 21.822141647338867
+    thickness = 75
+    nz = 75
+    params = locals() 
+    simulator =  ResistSimulator(**params)
+    return simulator
+
+
+def get_fuilt_neg_simulator():
+    alpha = 0.006186  # 6.186/um
+    dill_a = 0
+    dill_b = alpha - dill_a
+    dill_c = 0.001  
+    lamp_power = 30000.0 
     dose = 2003.27124
     n_steps = 50
     m_th = 0.668257773 
@@ -181,7 +220,7 @@ def get_fuilt_simulator():
     simulator =  ResistSimulator(**params)
     return simulator
 
-def get_iccad13_simulator():
+def get_iccad13_neg_simulator():
     alpha = 0.006186  # 6.186/um
     dill_a = 0
     dill_b = alpha - dill_a
@@ -200,7 +239,7 @@ def get_iccad13_simulator():
     simulator =  ResistSimulator(**params)
     return simulator
 
-def get_hg_simulator():
+def get_hg_neg_simulator():
     alpha = 0.006186  # 6.186/um
     dill_a = 0
     dill_b = alpha - dill_a

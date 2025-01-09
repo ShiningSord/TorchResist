@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from multiprocessing import Pool
 
-from simulator import get_fuilt_simulator, get_iccad13_simulator
+from simulator import get_default_simulator,get_fuilt_simulator,get_iccad13_simulator
 
 
 def parse_args():
