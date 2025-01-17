@@ -13,8 +13,6 @@
     - [Usage](#usage)
     - [Features](#features)
 
-- [Extension: Advanced Usage Techniques](#extension-advanced-usage-techniques)
-
 ---
 
 # Introduction to TorchResist
@@ -50,7 +48,7 @@ pip3 install -r requirements.txt
 First, clone the repository:
 
 ```bash
-git clone https://github.com/your-repo-url.git
+git clone https://github.com/ShiningSord/TorchResist.git
 ```
 
 Next, change your directory to the project folder:
@@ -205,9 +203,3 @@ A demo resist image for ICCAD13 is stored in `demo/resist/iccad13`:
 
 
 
----
-
-
-# Extension: Advanced Usage Techniques
-
-Reserved for advanced instructions and optimizations.
