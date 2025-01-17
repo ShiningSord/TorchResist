@@ -20,7 +20,6 @@ class AbbeSim:
                  wavelength=193,
                  batch=False, 
                  defocus=0, 
-                 par=False
                  ) -> None:
         self.sigma = sigma
         self.NA = NA
@@ -31,7 +30,7 @@ class AbbeSim:
 
         self.defocus = defocus
         
-        self.par = par
+        self.par = False
     
     def __compute_source(self):
         # Define the effective source points of the circular source
@@ -49,20 +48,7 @@ class AbbeSim:
         aerial_image = torch.zeros_like(mask_fft, dtype=torch.float)
         # Compute all source points contribution to the aerial image
         if self.par: 
-            pupils = []
-            for freq_src in self.source_points:
-                # Shift of the frequency support relative to the current source point frequency
-                freq_msk_shft = self.freq - freq_src
-                # Shifted transfer function of the projection lens.
-                pupil_shifted = torch.where(freq_msk_shft < getDeltaFreq(self.NA, self.wavelength), 
-                                            torch.ones_like(freq_msk_shft, device=freq_msk_shft.device), 
-                                            torch.zeros_like(freq_msk_shft, device=freq_msk_shft.device))
-                pupil_shifted = getDefocus(pupil_shifted, freq_msk_shft, self.wavelength, self.defocus)
-                pupils.append(pupil_shifted[None, ...])
-            pupils = torch.cat(pupils, dim=0)
-            mask_lpfs = mask_fft[None, ...] * pupils
-            aerials = torch.pow(torch.abs(fft.ifft2(fft.ifftshift(mask_lpfs))), 2)
-            aerial_image = aerials.mean(dim=0)
+            raise NotImplementedError
         else: 
             for freq_src in self.source_points:
                 # Shift of the frequency support relative to the current source point frequency
@@ -96,20 +82,7 @@ class AbbeSim:
 
         # Compute all source points contribution to the aerial image
         if self.par: 
-            pupils = []
-            for freq_src in self.source_points:
-                # Shift of the frequency support relative to the current source point frequency
-                freq_msk_shft = freq - freq_src
-                # Shifted transfer function of the projection lens.
-                pupil_shifted = torch.where(freq_msk_shft < getDeltaFreq(self.NA, self.wavelength), 
-                                            torch.ones_like(freq_msk_shft, device=freq_msk_shft.device), 
-                                            torch.zeros_like(freq_msk_shft, device=freq_msk_shft.device))
-                pupil_shifted = getDefocus(pupil_shifted, freq_msk_shft, self.wavelength, self.defocus)
-                pupils.append(pupil_shifted[:, None, ...])
-            pupils = torch.cat(pupils, dim=1)
-            mask_lpfs = mask_fft[:, None, ...] * pupils
-            aerials = torch.pow(torch.abs(fft.ifft2(fft.ifftshift(mask_lpfs))), 2)
-            aerial_image = aerials.mean(dim=1)
+            raise NotImplementedError
 
         else: 
             for freq_src in self.source_points:
@@ -146,7 +119,6 @@ class AbbeGradient:
                  wavelength=193,
                  batch=False, 
                  defocus=0, 
-                 par=False
                  ) -> None:
         
         self.sigma = sigma
@@ -158,7 +130,7 @@ class AbbeGradient:
 
         self.defocus = defocus
 
-        self.par = par
+        self.par = False
     
     def __compute_source(self):
         # Define the effective source points of the circular source
@@ -175,26 +147,7 @@ class AbbeGradient:
         gradient = torch.zeros_like(mask_fft, dtype=torch.float)
 
         if self.par: 
-            pupils = []
-            for freq_src in self.source_points:
-                # Shift of the frequency support relative to the current source point frequency
-                freq_msk_shft = self.freq - freq_src
-                # Shifted transfer function of the projection lens.
-                pupil_shifted = torch.where(freq_msk_shft < getDeltaFreq(self.NA, self.wavelength), 
-                                            torch.ones_like(freq_msk_shft, device=freq_msk_shft.device), 
-                                            torch.zeros_like(freq_msk_shft, device=freq_msk_shft.device))
-                pupil_shifted = getDefocus(pupil_shifted, freq_msk_shft, self.wavelength, self.defocus)
-                pupils.append(pupil_shifted[None, ...])
-            pupils = torch.cat(pupils, dim=0)
-            mask_lpfs = mask_fft[None, ...] * pupils
-            
-            ta = fft.ifft2(fft.ifftshift(mask_lpfs))
-            tmpgradient = 2*ta
-            tmpgradient = fft.fftshift(fft.fft2(tmpgradient))
-            tmpgradient = tmpgradient*torch.conj(pupils)
-            tmpgradient = fft.ifft2(fft.ifftshift(tmpgradient))
-            
-            gradient = tmpgradient.real.mean(dim=0)
+            raise NotImplementedError
 
         else: 
             for freq_src in self.source_points:
@@ -230,26 +183,7 @@ class AbbeGradient:
         freq = self.freq.expand(batch_size, *mask_shape)
 
         if self.par: 
-            pupils = []
-            for freq_src in self.source_points:
-                # Shift of the frequency support relative to the current source point frequency
-                freq_msk_shft = freq - freq_src
-                # Shifted transfer function of the projection lens.
-                pupil_shifted = torch.where(freq_msk_shft < getDeltaFreq(self.NA, self.wavelength), 
-                                            torch.ones_like(freq_msk_shft, device=freq_msk_shft.device), 
-                                            torch.zeros_like(freq_msk_shft, device=freq_msk_shft.device))
-                pupil_shifted = getDefocus(pupil_shifted, freq_msk_shft, self.wavelength, self.defocus)
-                pupils.append(pupil_shifted[:, None, ...])
-            pupils = torch.cat(pupils, dim=1)
-            mask_lpfs = mask_fft[:, None, ...] * pupils
-            
-            ta = fft.ifft2(fft.ifftshift(mask_lpfs))
-            tmpgradient = 2*ta
-            tmpgradient = fft.fftshift(fft.fft2(tmpgradient))
-            tmpgradient = tmpgradient*torch.conj(pupils)
-            tmpgradient = fft.ifft2(fft.ifftshift(tmpgradient))
-            
-            gradient = tmpgradient.real.mean(dim=1)
+            raise NotImplementedError
             
         else: 
             for freq_src in self.source_points:

@@ -81,7 +81,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Initialize simulation and gradient
-    sim = AbbeSim(None, resolution, sigma, defocus=None, batch=True, par=False)
+    sim = AbbeSim(None, resolution, sigma, defocus=None, batch=True)
 
     # Create output directories
     image_output_path = os.path.join(output_path, "images")
